@@ -1,23 +1,61 @@
-# Why Is My Room So Hot?
+# 🌡️ Why Is My Room So Hot?
 
-A simulated HDB comfort demo. It uses PostgreSQL as the source of truth. ClickHouse receives best-effort direct events.
+An interactive simulated HDB comfort dashboard. It shows room heat signals, free cooling actions, AI-guided AC offers, live billing, ClickHouse event history, and Airwallex sandbox payment evidence.
 
-## Run
+> 🧪 This is a simulation. It does not control real AC units, fans, blinds, sensors, or payments.
 
-1. Run `npm install`.
-2. Run `npm run dev`.
-3. Open `http://127.0.0.1:5175`.
+## ✨ What it does
 
-Without `DATABASE_URL`, the app uses an in-memory test fixture. It seeds the four demo rooms on each API restart. It is not persistent PostgreSQL evidence.
+- 🏠 Shows four tenant rooms with live temperature and comfort states.
+- ❄️ Tracks simulated AC sessions and capped charges.
+- ✣ Tracks active fan charges and closed-blind indicators.
+- 🤖 Guides users through room actions and human-approved AC offers.
+- 📊 Stores room events in ClickHouse and shows a live activity stream.
+- 💳 Creates Airwallex **sandbox** PaymentIntents after a local invoice exists.
+- ✅ Marks a payment paid only after a signed Airwallex webhook.
 
-To use PostgreSQL and ClickHouse, copy `.env.example` to `.env`, set secure values, and run `docker compose up -d`.
+## 🧰 Technologies
 
-`npm run build`, `npm run typecheck`, and `npm test` are the project checks.
+| Area | Technologies |
+|---|---|
+| 🎨 Frontend | React 19, TypeScript, Vite, CSS |
+| ⚙️ API | Node.js, Fastify, TypeScript |
+| 🗃️ Primary state | PostgreSQL, `pg`, `pg-mem` demo fixture |
+| 📈 Event history | ClickHouse Cloud, `@clickhouse/client` |
+| 🤖 Room agent | OpenAI SDK with function tools |
+| 💳 Payments | Airwallex sandbox, Hosted Payment Page, `@airwallex/components-sdk` |
+| 🧪 Tests | Vitest |
+| 🧱 Local tooling | npm, tsx, concurrently, Docker Compose optional |
 
-## Payment
+## 🚀 Run locally
 
-The only payment route is an app invoice plus Airwallex sandbox PaymentIntent. The server creates PaymentIntents only with a frozen local invoice. Configure an HTTPS callback at `/api/webhooks/airwallex`. The webhook must use its configured secret. Browser return parameters never mark an invoice paid.
+```powershell
+npm install
+npm.cmd run dev
+```
 
-## Limits
+Open [http://127.0.0.1:5175](http://127.0.0.1:5175).
 
-This uses simulated temperatures and test money. It has no production payment route, retries, reconciliation, worker, queue, or subscriptions.
+Without `DATABASE_URL`, the API uses an in-memory four-room fixture. It resets when the API restarts.
+
+## 🔐 Configuration
+
+Copy `.env.example` to `.env` and set values locally. Do not commit `.env`.
+
+```powershell
+Copy-Item .env.example .env
+```
+
+The repository excludes `.env` through `.gitignore`. It contains no API keys, passwords, access tokens, or private service URLs.
+
+## ✅ Checks
+
+```powershell
+npm.cmd run typecheck
+npm.cmd test
+npm.cmd run build
+```
+
+## ⚠️ Sandbox limits
+
+Airwallex runs in sandbox mode only. Production payments, subscriptions, queues, workers, and autonomous purchases are not included.
