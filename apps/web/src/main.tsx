@@ -1,0 +1,2 @@
+import { StrictMode } from "react"; import { createRoot } from "react-dom/client"; import Dashboard from "./Dashboard"; import ButtonRuntime from "./ButtonRuntime"; import BillingRuntime from "./BillingRuntime"; import RoomIndicators from "./RoomIndicators";
+createRoot(document.getElementById("root")!).render(<StrictMode><Dashboard/><ButtonRuntime/><BillingRuntime/><RoomIndicators/></StrictMode>);
